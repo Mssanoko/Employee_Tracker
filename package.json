@@ -1,0 +1,24 @@
+{
+  "name": "employee_tracker11",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mssanoko/Employee_Tracker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mssanoko/Employee_Tracker/issues"
+  },
+  "homepage": "https://github.com/Mssanoko/Employee_Tracker#readme",
+  "dependencies": {
+    "inquirer": "^7.3.3",
+    "mysql": "^2.18.1",
+    "sql": "^0.78.0"
+  }
+}
