@@ -10,11 +10,11 @@ var connection = mysql.createConnection({
 });
 connection.connect(function(err) {
   if (err) throw err;
-  runSearch();
+  console.log("connected as id " + connection.threadId);
+  start();
 });
-inquirer.prompt (
-    [
-      {
+function start(){
+inquirer.prompt ([{
         message:"What would you like to do?",
         type: "list",
         name: "liste",
@@ -27,22 +27,22 @@ inquirer.prompt (
           "Remove Employee",
           "Update Employee Role",
           "Update Employee Manager",
-
+          "Quit",
         ]
-      }
-    ]
-)
+      }])
+
 .then(function (answers){
   console.log(answers.liste)
   switch (answers.liste) {
-    case
+    case "View All Employees":
+    case "View All Employees By Department":
+    case "View All Employees By Manager":
+    case "View all the departments":
+    case "Add Employee":
+    case "Remove Employee":
+    case "Update Employee Role":
+    case "Update Employee Manager":
+    case "Quit":
   }
-})
-
-connection.connect(function(err) {
-  if (err) throw err;
-  console.log("connected as id " + connection.threadId);
-  connection.end();
 });
-
-   
+}
