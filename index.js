@@ -35,14 +35,42 @@ inquirer.prompt ([{
   console.log(answers.liste)
   switch (answers.liste) {
     case "View All Employees":
+      employeesSearch();
+      break;
     case "View All Employees By Department":
+      employeesDepartment();
+      break;
     case "View All Employees By Manager":
+      employeesManager();
+      break;
     case "View all the departments":
+      departmentsSearch();
+      break;
     case "Add Employee":
+      addEmployees();
+      break;
     case "Remove Employee":
+      removeEmployees();
+      break;
     case "Update Employee Role":
+      updateEmployeerole();
+      break;
     case "Update Employee Manager":
+      updateEmployeemanager();
+      break;
     case "Quit":
+      connection.end();
+      break;
   }
 });
 }
+// function employeesSearch() {
+//   var query = "SELECT artist FROM top5000 GROUP BY artist HAVING count(*) > 1";
+//   connection.query(query, function(err, res) {
+//     if (err) throw err;
+//     for (var i = 0; i < res.length; i++) {
+//       console.log(res[i].artist);
+//     }
+//     runSearch();
+//   });
+// }
