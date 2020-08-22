@@ -32,7 +32,6 @@ inquirer.prompt ([{
       }])
 
 .then(function (answers){
-  console.log(answers.liste)
   switch (answers.liste) {
     case "View All Employees":
       employeesSearch();
@@ -62,15 +61,20 @@ inquirer.prompt ([{
       connection.end();
       break;
   }
-});
+  });
 }
-// function employeesSearch() {
-//   var query = "SELECT artist FROM top5000 GROUP BY artist HAVING count(*) > 1";
-//   connection.query(query, function(err, res) {
-//     if (err) throw err;
-//     for (var i = 0; i < res.length; i++) {
-//       console.log(res[i].artist);
-//     }
-//     runSearch();
-//   });
-// }
+function employeesSearch() {
+  connection.query(`SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary, CONCAT(m.first_name, ' ', m.last_name) AS manager
+  FROM employee e LEFT JOIN role r ON e.role_id = r.id
+  LEFT JOIN department d
+  ON d.id = r.department_id
+  LEFT JOIN employee m
+	ON m.id = e.manager_id`, function (err, res){
+    if(err) throw err;
+    console.table(res)
+    console.log()
+    start();
+  });
+  }
+
+  

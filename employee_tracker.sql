@@ -1,3 +1,4 @@
+
 DROP DATABASE IF EXISTS employeet_db;
 
 CREATE DATABASE employeet_db;
@@ -27,4 +28,11 @@ CREATE TABLE employee (
     manager_id INT,
     PRIMARY KEY (id)
 );
+
+SELECT * FROM department;
+SELECT * FROM role;
+SELECT * FROM employee;
+
+
+
 
