@@ -53,9 +53,21 @@ inquirer.prompt ([{
     case "Add Employee":
       addEmployees();
       break;
+    case "Add Department":
+      addDepartment();
+      break;
+    case "Add A role":
+      addRole();
+      break;
     case "Remove Employee":
       removeEmployees();
       break;
+    case "Remove Department":
+      removeDepartment();
+      break;
+    case "Remove role":
+      removeRole();
+      break; 
     case "Update Employee Role":
       updateEmployeerole();
       break;
@@ -141,6 +153,32 @@ function employeesSearch() {
           });
       });
   }
+  //Add Department
+  function addDepartment() {
+    connection.query("SELECT * FROM department", function (err, res) {
+        if (err) throw err;
+        console.log("----------    Existing records in department table     ----------- ");
+        console.table(res);
+    inquirer
+        .prompt([
+            {
+                name: "dept_name",
+                type: "input",
+                message: "Enter department name to be added: "
+            }
+        ]).then(function (answer) {
+            var query = `INSERT INTO department(name) VALUES ("${answer.dept_name}")`;
+            connection.query(query, function (err, res) {
+                if (err) throw err;
+                console.log("A new department with name '" + answer.dept_name + "' has been added to the DB.");
+                console.log(" ");
+                console.log(" ");
+                end();
+            })
+        })
+    });
+  }
+   
   //Remove Employee
   function removeEmployees(choice) {
     connection.query("SELECT * FROM " + choice, function (err, res) {
