@@ -20,10 +20,9 @@ inquirer.prompt ([{
         name: "liste",
         choices:[
           "View All Employees",
-          "View All Employees By Department",
-          "View All Employees By Role",
+          "View Department",
+          "View Role",
           "View All Employees By Manager",
-          "View all the departments",
           "Add Employee",
           "Add a Department",
           "Add a Role",
@@ -38,22 +37,18 @@ inquirer.prompt ([{
       }])
 
 .then(function (answers){
-  console.log(answers.action)
-  switch (answers.action) {
+  switch (answers.liste) {
     case "View All Employees":
       employeesView();
       break;
-    case "View All Employees By Department":
-      employeesDepartment();
+    case "View Departments":
+      departmentView();
       break;
-    case "View All Employees By Role":
-      employeesRole();
+    case "View Role":
+      roleView();
       break;
     case "View All Employees By Manager":
       employeesManager();
-      break;
-    case "View all the departments":
-      departmentsSearch();
       break;
     case "Add Employee":
       addEmployees();
@@ -80,6 +75,7 @@ inquirer.prompt ([{
       updateEmployeemanager();
       break;
     case "Quit":
+      end()
       connection.end();
       break;
   }
@@ -104,11 +100,129 @@ function employeesView() {
     if (err) throw err;
 
     console.table(res);
-    console.log("Employees viewed!\n");
-
     start();
   });
 }
+//View Roles
+function roleView() {
+	// console.log("You are viewing roles");
+    connection.query("SELECT * FROM role", (err, res) => {
+    if (err) throw err;
+    console.log(`You are viewing ${res.length} roles`);
+    console.table("All Roles:", res); 
+    start();
+    })
+}
+//add employee
+function addEmployees() {
+	// console.log("You are adding employees");
+	// connection.query("SELECT role.title, employee.first_name, employee.last_name, employee.role_id, manager_id FROM role FULL OUTER JOIN employee ON employee.role_id=role.id ORDER BY role.title", 
+	connection.query("SELECT * FROM role", function (err, res) {
+		if (err) throw err;
+		inquirer
+			.prompt([
+				{
+					name: "first_name",
+					type: "input", 
+					message: "What is the employee's first name?",
+				},
+				{
+					name: "last_name",
+					type: "input", 
+					message: "What is the employee's last name?"
+				},
+				{
+					name: "role", 
+					type: "list",
+					choices: function() {
+					var roleArray = [];
+					for (var i = 0; i < res.length; i++) {
+						roleArray.push(res[i].title);
+					}
+					return roleArray;
+					},
+					message: "What is the employee's role?"
+				},
+				
+				])
+			.then(function (answer) {
+				var roleID;
+				for (var i = 0; i < res.length; i++) {
+					if (res[i].title == answer.role) {
+						roleID = res[i].id;
+						console.log(roleID)
+					}                  
+				}  
+				connection.query(
+				"INSERT INTO employee SET ?",
+				{
+					first_name: answer.first_name,
+					last_name: answer.last_name,
+					role_id: roleID,
+				},
+				function (err) {
+					if (err) throw err;
+					console.log("New employee has been added!");
+					start();
+				}
+			)
+		})
+	})
+
+}
+
+//remove employee 
+function removeEmployees() {
+  connection.query("SELECT * FROM employee", function (err, results) {
+      if (err) throw err;
+      inquirer.prompt({
+          name: "employee",
+          type: "list",
+          message: "Select which employee you would like to remove.",
+          choices: function () {
+              var employeeArray = [];
+              for (var i = 0; i < results.length; i++) {
+                  employeeArray.push(results[i].first_name + " " + results[i].last_name);
+              }
+              return employeeArray;
+          }
+      }).then(function (answer) {
+          connection.query(
+              "DELETE FROM employee WHERE id = (SELECT id WHERE CONCAT (first_name, ' ', last_name) = ?)",
+              [answer.employee],
+              function (err, res) {
+                  if (err) throw err;
+                  start();
+              })
+      })
+  })
+};
+
+// QUIT 
+function end() {
+  inquirer
+      .prompt({
+          name: "action",
+          type: "list",
+          message: "Would you like to continue? ",
+          choices: [
+              "Yes",
+              "No",
+          ]
+      }).then(function (answer) {
+          if (answer.action === "Yes") {
+              console.log(" ");
+              console.log(" ");
+              start();
+          } else {
+              console.log(" ");
+              console.log("Thank you for using employee tracker. Have a great day ahead.");
+              connection.end()
+          }
+
+      })
+}
+
 
 
 
