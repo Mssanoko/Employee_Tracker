@@ -8,7 +8,7 @@ VALUES
     ("Legal");
 
 
-INSERT INTO role (title, salary, department_id)
+INSERT INTO roles (title, salary, department_id)
 VALUES 
     ("Sales Lead", 100000, 1),
     ("Salesperson", 80000, 1),
@@ -32,5 +32,5 @@ VALUES
 
 
 SELECT * FROM department;
-SELECT * FROM role;
+SELECT * FROM roles;
 SELECT * FROM employee;
