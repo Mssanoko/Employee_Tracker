@@ -24,11 +24,11 @@ inquirer.prompt ([{
           "View Role",
           "View All Employees By Manager",
           "Add Employee",
-          "Add a Department",
-          "Add a Role",
+          "Add Department",
+          "Add Role",
           "Remove Employee",
-          "Remove a Department",
-          "Remove a Role",
+          "Remove Department",
+          "Remove Role",
           "Update Employee Role",
           "Update Employee Manager",
           "Department's budget",
@@ -56,7 +56,7 @@ inquirer.prompt ([{
     case "Add Department":
       addDepartment();
       break;
-    case "Add A role":
+    case "Add role":
       addRole();
       break;
     case "Remove Employee":
@@ -103,20 +103,9 @@ function employeesView() {
     start();
   });
 }
-//View Roles
-function roleView() {
-	// console.log("You are viewing roles");
-    connection.query("SELECT * FROM role", (err, res) => {
-    if (err) throw err;
-    console.log(`You are viewing ${res.length} roles`);
-    console.table("All Roles:", res); 
-    start();
-    })
-}
+
 //add employee
-function addEmployees() {
-	// console.log("You are adding employees");
-	// connection.query("SELECT role.title, employee.first_name, employee.last_name, employee.role_id, manager_id FROM role FULL OUTER JOIN employee ON employee.role_id=role.id ORDER BY role.title", 
+function addEmployees() { 
 	connection.query("SELECT * FROM role", function (err, res) {
 		if (err) throw err;
 		inquirer
@@ -168,8 +157,34 @@ function addEmployees() {
 			)
 		})
 	})
-
 }
+// add department
+function addDepartment() { 
+		inquirer
+			.prompt([
+				{
+					name: "first_name",
+					type: "input", 
+					message: "What is the name of the department you would like to add?",
+				},
+				])
+			.then(function (answer) {
+        connection.query(
+          "INSERT INTO department SET ?",
+          {
+              name: answer.name
+          },
+          function (err) {
+              if (err) throw err;
+              console.log("Your department was created successfully!");
+              // re-prompt the user for if they want to bid or post
+              start();
+          }
+      );
+  });
+};
+	
+// add role
 
 //remove employee 
 function removeEmployees() {
