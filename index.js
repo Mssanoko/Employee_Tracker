@@ -1,6 +1,6 @@
 var inquirer = require("inquirer");
 var mysql = require("mysql");
-// var table = require("console.table");
+
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -16,7 +16,7 @@ connection.connect(function (err) {
     start();
 });
 
-//function which prompts the user for what action they should take
+
 function start() {
     inquirer
         .prompt({
@@ -31,9 +31,7 @@ function start() {
                 "Add a Department",
                 "Add a Role",
                 "Update Employee Info",
-                // "List all Employees by Department",
                 "View Employees by Manager",
-                // "list All Roles",
                 "Remove an Employee",
                 "Remove a Department",
                 "Remove a Role",
@@ -55,9 +53,6 @@ function start() {
                     view("roles");
                     break;
 
-                // case "list all Employees by Department":
-                //     list("department");
-                //     break;
 
                 case "View Employees by Manager":
                     list("manager");
@@ -83,9 +78,6 @@ function start() {
                     update("employee");
                     break;
 
-                // case "list All Roles":
-                //     list("roles");
-                //     break;
 
                 case "Department's budget":
                     total();
@@ -115,18 +107,6 @@ function list(choice) {
         case "manager":
             sqlQuery = "SELECT e.id, CONCAT(e.first_name, ' ' ,e.last_name) AS Name, CONCAT(m.first_name, ' ' ,m.last_name) AS Manager_Name FROM employee e LEFT OUTER JOIN employee m ON e.manager_id = m.id ORDER BY m.first_name";
             break;
-
-        // case "employees":
-        //     sqlQuery = "SELECT e.id, CONCAT(e.first_name, ' ' ,e.last_name) AS Name, r.title As Title, d.name As Department FROM employee e INNER JOIN roles r ON e.role_id = r.id INNER JOIN department d ON r.department_id = d.id ORDER BY e.first_name";
-        //     break;
-
-        // case "department":
-        //     sqlQuery = "SELECT e.id, CONCAT(e.first_name, ' ' ,e.last_name) AS Name, r.title As Title, d.name As Department FROM employee e INNER JOIN roles r ON e.role_id = r.id INNER JOIN department d ON r.department_id = d.id ORDER BY d.name";
-        //     break;
-
-        // case "roles":
-        //     sqlQuery = "SELECT r.id, r.title, r.salary, d.name FROM roles r INNER JOIN department d ON r.department_id = d.id";
-        //     break;
     }
     connection.query(sqlQuery, function (err, res) {
         if (err) throw err;
@@ -134,7 +114,7 @@ function list(choice) {
         end();
     })
 }
-
+//add employee
 function add(choice) {
     switch (choice) {
         case "employee":
@@ -186,7 +166,7 @@ function add(choice) {
                     });
                 });
             break;
-
+// add department
         case "department":
 
             connection.query("SELECT * FROM department", function (err, res) {
@@ -212,7 +192,7 @@ function add(choice) {
                 })
             });
             break;
-
+// add role
             case "role":
 
                 connection.query("SELECT * FROM roles", function (err, res) {
@@ -260,7 +240,7 @@ function add(choice) {
     
     }
 }
-
+// remove employee
 function remove(choice) {
     connection.query("SELECT * FROM " + choice, function (err, res) {
         if (err) throw err;
@@ -288,7 +268,7 @@ function remove(choice) {
             });
     });
 }
-
+//update employee manager
 function update(choice) {
 
     connection.query("SELECT * FROM employee", function (err, res) {
@@ -344,7 +324,7 @@ function update(choice) {
         });
     });
 }
-
+//quit
 function end() {
     inquirer
         .prompt({
